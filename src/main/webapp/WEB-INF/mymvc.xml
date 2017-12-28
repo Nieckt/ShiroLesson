@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+	">
+	<!-- 控件扫描 
+		  在xml配置了这个标签后，spring可以自动去扫描base-pack下面或者子包下面的java文件，
+		  如果扫描到有@Component @Controller@Service等这些注解的类，则把这些类注册为bean
+		  
+		 springmvc主打控制层 + 视图层
+	-->
+	<context:component-scan base-package="cn">
+		<!-- annotation排除带有某类的注解不扫描 -->
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+	</context:component-scan>
+	<mvc:default-servlet-handler/>
+	<!-- 引用返回对象 响应json的消息转化器
+		把对象转换为响应头输出出去
+	 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<!-- 返回字节数组和对象 -->
+			<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html</value>
+						<value>application/x-www-form-urlencoded</value>
+					</list>
+				</property>
+			</bean>
+			<!-- 配置返回对应解析json的消息转换器 -->
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html</value>
+						<value>application/x-www-form-urlencoded</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+</beans>     
+ 
